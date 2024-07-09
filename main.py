@@ -1,6 +1,7 @@
 # import modules
 import tkinter as tk
-from tkinter import Tk
+
+# from tkinter import Tk
 from tkinter import ttk
 
 
@@ -149,6 +150,7 @@ class MainPage(tk.Frame):
             "<Button-1>", lambda event: self.controller.show_all_lists()
         )
 
+    # function for adding a new item
     def prepare_item(self):
         item_name = self.inputItemBox.get()
         if item_name.isalpha():
@@ -156,14 +158,12 @@ class MainPage(tk.Frame):
                 widget.destroy()
 
             # middle-left info label (quantity)
-            self.infoLabel = ttk.Label(
-                self.middleMenuFrame, text="How many items are needed? "
-            )
+            self.infoLabel = ttk.Label(self.middleMenuFrame, text="How many items? ")
             self.infoLabel.grid(row=1, column=0, sticky="E")
 
             # middle-left entry box (quantity)
-            self.inputItemBox = ttk.Entry(self.middleMenuFrame, width=5)
-            self.inputItemBox.grid(row=1, column=1, sticky="W")
+            self.inputQuantityBox = ttk.Entry(self.middleMenuFrame, width=5)
+            self.inputQuantityBox.grid(row=1, column=1, sticky="W")
 
             # middle-right add to list button (confirm)
             self.confirmItemButton = ttk.Button(
@@ -175,8 +175,50 @@ class MainPage(tk.Frame):
             )
             self.confirmItemButton.grid(row=1, column=2, sticky="E")
 
+    # function confirming item quantity, adding to active list
     def confirm_item(self, item_name):
-        pass
+        item_quantity = self.inputQuantityBox.get()
+        if item_quantity.isnumeric():
+            item = (item_name, item_quantity)
+            print(item)
+            for widget in self.middleMenuFrame.winfo_children():
+                widget.destroy()
+
+            # display success message
+            self.successLabel = tk.Label(
+                self.middleMenuFrame, text="Added successfully!"
+            )
+            self.successLabel.grid(row=1, column=0, sticky="E")
+
+            # reset widgets button
+            self.successButton = ttk.Button(
+                self.middleMenuFrame, text="OK", command=lambda: self.reset_view()
+            )
+            self.successButton.grid(row=1, column=1, sticky="E")
+
+    def reset_view(self):
+        for widget in self.middleMenuFrame.winfo_children():
+            widget.destroy()
+
+        # middle-left info label
+        self.infoLabel = ttk.Label(self.middleMenuFrame, text="Type in item name:")
+        self.infoLabel.grid(row=1, column=0, sticky="E")
+
+        # middle-left entry box
+        self.inputItemBox = ttk.Entry(self.middleMenuFrame, width=15)
+        self.inputItemBox.grid(row=1, column=1, sticky="W")
+
+        # middle-right add to list button
+        self.confirmItemButtonIcon = tk.PhotoImage(file="icons8-cart-16-white.png")
+        self.confirmItemButton = ttk.Button(
+            self.middleMenuFrame,
+            text="Add",
+            image=self.confirmItemButtonIcon,
+            compound="right",
+            width=2.2,
+            command=lambda: self.prepare_item(),
+        )
+        self.confirmItemButton.grid(row=1, column=2, sticky="E")
 
 
 # create all lists page
