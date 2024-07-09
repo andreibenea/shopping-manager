@@ -142,12 +142,11 @@ class MainPage(tk.Frame):
         self.menuSeparator.pack(fill="x")
 
         # create bottom frame for displaying available lists
-        self.bottomListFrame = ttk.Frame(self, height=350, width=450, padding=(10, 5))
+        self.bottomListFrame = ttk.Frame(self, height=300, width=450, padding=(10, 5))
         self.bottomListFrame.pack(fill="x")
         self.bottomListFrame.columnconfigure(0, weight=1)
         self.bottomListFrame.columnconfigure(1, weight=1)
         self.bottomListFrame.columnconfigure(2, weight=1)
-        self.bottomListFrame.grid_propagate(False)
 
         # Lists Title
         self.bottomListTitle = ttk.Label(
@@ -292,6 +291,7 @@ class ActiveListPage(tk.Frame):
         self.topMenuFrame.columnconfigure(0, weight=1)
         self.topMenuFrame.columnconfigure(1, weight=1)
         self.topMenuFrame.columnconfigure(2, weight=1)
+        self.topMenuFrame.pack_propagate(False)
 
         # top nav button
         self.topNavButton = ttk.Menubutton(
@@ -317,18 +317,48 @@ class ActiveListPage(tk.Frame):
         self.menuSeparator = ttk.Separator(self)
         self.menuSeparator.pack(fill="x")
 
-        # create listbox
-        self.listbox = tk.Listbox(self)
-        self.listbox.pack(fill="both", expand=True)
+        # create frame for list items
+        self.listFrame = ttk.LabelFrame(self, height=250, width=450)
+        self.listFrame.pack(fill="both")
+        self.listFrame.pack_propagate(False)
 
     def show_active_list(self):
-        self.listbox.delete(0, "end")
+        for widget in self.listFrame.winfo_children():
+            widget.destroy()
         active_list = self.controller.lists.get(self.controller.active_list, [])
         if not active_list:
-            self.listbox.insert("end", "No entries")
+            label = ttk.Label(self.listFrame, text="No entries")
+            label.pack()
         else:
             for item in active_list:
-                self.listbox.insert("end", item)
+                self.create_item_widget(item)
+
+    def create_item_widget(self, item):
+        item_frame = ttk.Frame(self.listFrame)
+        item_frame.pack(fill="x", pady=5)
+
+        item_label = ttk.Label(item_frame, text=item)
+        item_label.pack(side="left", padx=5)
+
+        done_button = ttk.Button(
+            item_frame, text="Done", command=lambda: self.mark_as_done(item)
+        )
+        done_button.pack(side="right", padx=5)
+
+        remove_button = ttk.Button(
+            item_frame, text="Remove", command=lambda: self.remove_item(item)
+        )
+        remove_button.pack(side="right", padx=5)
+
+    def mark_as_done(self, item):
+        # Implement the logic for marking the item as done
+        print(f"Item marked as done: {item}")
+
+    def remove_item(self, item):
+        if self.controller.active_list:
+            self.controller.lists[self.controller.active_list].remove(item)
+            self.show_active_list()
+            print(f"Item removed: {item}")
 
 
 # call main
