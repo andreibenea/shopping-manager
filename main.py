@@ -46,10 +46,16 @@ class Application(tk.Tk):
     def quit_app(self):
         self.quit()
 
-    # def add_item(self, item):
-    #     if self.active_list:
-    #         self.lists[self.active_list].append(item)
-    #     else:
+    def add_item(self, item):
+        if self.active_list:
+            self.lists[self.active_list].append(item)
+            print(self.lists)
+            print(self.active_list)
+        else:
+            self.lists["default"] = [item]
+            self.active_list = "default"
+            print(self.lists)
+            print(self.active_list)
 
 
 # create main page
@@ -181,6 +187,7 @@ class MainPage(tk.Frame):
         if item_quantity.isnumeric():
             item = (item_name, item_quantity)
             print(item)
+            self.controller.add_item(item)
             for widget in self.middleMenuFrame.winfo_children():
                 widget.destroy()
 
