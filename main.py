@@ -1,7 +1,6 @@
 # import modules
+import os
 import tkinter as tk
-
-# from tkinter import Tk
 from tkinter import ttk
 
 
@@ -29,10 +28,13 @@ class Application(tk.Tk):
 
         # show Main Page on start
         self.show_frame("MainPage")
+        # self.check_for_files()
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+        if page_name == "ActiveListPage":
+            self.frames[page_name].show_active_list()
 
     def show_home_page(self):
         self.show_frame("MainPage")
@@ -45,6 +47,14 @@ class Application(tk.Tk):
 
     def quit_app(self):
         self.quit()
+
+    # manipulate files
+    # def check_for_files(self):
+    #     cwd = os.getcwd()+"/lists/"
+    #     print(cwd)
+    #     if not cwd:
+    #         file = open("test.txt", "a")
+    # dir_list = os.listdir(os.getcwd())
 
     def add_item(self, item):
         if self.active_list:
@@ -306,6 +316,19 @@ class ActiveListPage(tk.Frame):
         # separator
         self.menuSeparator = ttk.Separator(self)
         self.menuSeparator.pack(fill="x")
+
+        # create listbox
+        self.listbox = tk.Listbox(self)
+        self.listbox.pack(fill="both", expand=True)
+
+    def show_active_list(self):
+        self.listbox.delete(0, "end")
+        active_list = self.controller.lists.get(self.controller.active_list, [])
+        if not active_list:
+            self.listbox.insert("end", "No entries")
+        else:
+            for item in active_list:
+                self.listbox.insert("end", item)
 
 
 # call main
