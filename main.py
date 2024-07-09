@@ -100,6 +100,10 @@ class MainPage(tk.Frame):
         )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
+        
+        # top page name label
+        self.topPageName = ttk.Label(self.topMenuFrame, text="Home", font=("PT Mono", 16))
+        self.topPageName.grid(row=0, column=1)
 
         # top quit button
         self.topQuitButton = ttk.Button(
@@ -156,7 +160,7 @@ class MainPage(tk.Frame):
             self.bottomListFrame,
             text="All Lists",
             padding=(10, 10),
-            font=("Arial", 16),
+            font=("PT Mono", 16),
         )
         self.bottomListTitle.grid(row=0, column=1)
 
@@ -268,6 +272,10 @@ class AllListsPage(tk.Frame):
         )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
+        
+        # top page name label
+        self.topPageName = ttk.Label(self.topMenuFrame, text="All Lists", font=("PT Mono", 16))
+        self.topPageName.grid(row=0, column=1)
 
         # top quit button
         self.topQuitButton = ttk.Button(
@@ -369,6 +377,10 @@ class ActiveListPage(tk.Frame):
         )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
+        
+        # top page name label
+        self.topPageName = ttk.Label(self.topMenuFrame, text="Active List", font=("PT Mono", 16))
+        self.topPageName.grid(row=0, column=1)
 
         # top quit button
         self.topQuitButton = ttk.Button(
