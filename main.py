@@ -100,9 +100,11 @@ class MainPage(tk.Frame):
         )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
-        
+
         # top page name label
-        self.topPageName = ttk.Label(self.topMenuFrame, text="Home", font=("PT Mono", 16))
+        self.topPageName = ttk.Label(
+            self.topMenuFrame, text="Home", font=("PT Mono", 16)
+        )
         self.topPageName.grid(row=0, column=1)
 
         # top quit button
@@ -125,7 +127,9 @@ class MainPage(tk.Frame):
         self.middleMenuFrame.grid_propagate(False)
 
         # middle-left info label
-        self.infoLabel = ttk.Label(self.middleMenuFrame, text="Item name:")
+        self.infoLabel = ttk.Label(
+            self.middleMenuFrame, text="Item name:", font=("PT Mono", 14)
+        )
         self.infoLabel.grid(row=1, column=0, sticky="W")
 
         # middle-left entry box
@@ -180,7 +184,9 @@ class MainPage(tk.Frame):
                 widget.destroy()
 
             # middle-left info label (quantity)
-            self.infoLabel = ttk.Label(self.middleMenuFrame, text="How many items? ")
+            self.infoLabel = ttk.Label(
+                self.middleMenuFrame, text="How many items? ", font=("PT Mono", 14)
+            )
             self.infoLabel.grid(row=1, column=0, sticky="W")
 
             # middle-left entry box (quantity)
@@ -208,8 +214,8 @@ class MainPage(tk.Frame):
                 widget.destroy()
 
             # display success message
-            self.successLabel = tk.Label(
-                self.middleMenuFrame, text="Added successfully!"
+            self.successLabel = ttk.Label(
+                self.middleMenuFrame, text="Added successfully!", font=("PT Mono", 14)
             )
             self.successLabel.grid(row=1, column=0, sticky="E")
 
@@ -224,7 +230,9 @@ class MainPage(tk.Frame):
             widget.destroy()
 
         # middle-left info label
-        self.infoLabel = ttk.Label(self.middleMenuFrame, text="Item name:")
+        self.infoLabel = ttk.Label(
+            self.middleMenuFrame, text="Item name:", font=("PT Mono", 14)
+        )
         self.infoLabel.grid(row=1, column=0, sticky="W")
 
         # middle-left entry box
@@ -272,9 +280,11 @@ class AllListsPage(tk.Frame):
         )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
-        
+
         # top page name label
-        self.topPageName = ttk.Label(self.topMenuFrame, text="All Lists", font=("PT Mono", 16))
+        self.topPageName = ttk.Label(
+            self.topMenuFrame, text="All Lists", font=("PT Mono", 16)
+        )
         self.topPageName.grid(row=0, column=1)
 
         # top quit button
@@ -311,7 +321,9 @@ class AllListsPage(tk.Frame):
         all_lists = self.controller.lists
         print(all_lists)
         if len(all_lists) == 0:
-            label = ttk.Label(self.scrollable_frame, text="No entries")
+            label = ttk.Label(
+                self.scrollable_frame, text="No entries", font=("PT Mono", 14)
+            )
             label.pack()
         else:
             for list in all_lists:
@@ -321,7 +333,7 @@ class AllListsPage(tk.Frame):
         item_frame = ttk.Frame(self.scrollable_frame)
         item_frame.pack(fill="x", pady=5)
 
-        item_label = ttk.Label(item_frame, text=list)
+        item_label = ttk.Label(item_frame, text=list, font=("PT Mono", 14))
         item_label.pack(side="left", padx=5)
 
         done_button = ttk.Button(
@@ -347,6 +359,7 @@ class AllListsPage(tk.Frame):
             self.controller.lists.pop(list)
             self.show_all_lists_contents()
             print(f"Item removed: {list}")
+
 
 # create active list page
 class ActiveListPage(tk.Frame):
@@ -377,9 +390,11 @@ class ActiveListPage(tk.Frame):
         )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
-        
+
         # top page name label
-        self.topPageName = ttk.Label(self.topMenuFrame, text="Active List", font=("PT Mono", 16))
+        self.topPageName = ttk.Label(
+            self.topMenuFrame, text="Active List", font=("PT Mono", 16)
+        )
         self.topPageName.grid(row=0, column=1)
 
         # top quit button
@@ -415,7 +430,9 @@ class ActiveListPage(tk.Frame):
             widget.destroy()
         active_list = self.controller.lists.get(self.controller.active_list, [])
         if not active_list:
-            label = ttk.Label(self.scrollable_frame, text="No entries")
+            label = ttk.Label(
+                self.scrollable_frame, text="No entries", font=("PT Mono", 14)
+            )
             label.pack()
         else:
             for item in active_list:
@@ -425,7 +442,7 @@ class ActiveListPage(tk.Frame):
         item_frame = ttk.Frame(self.scrollable_frame)
         item_frame.pack(fill="x", pady=5)
 
-        item_label = ttk.Label(item_frame, text=item)
+        item_label = ttk.Label(item_frame, text=item, font=("PT Mono", 14))
         item_label.pack(side="left", padx=5)
 
         done_button = ttk.Button(
