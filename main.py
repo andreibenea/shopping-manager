@@ -36,6 +36,8 @@ class Application(tk.Tk):
         frame.tkraise()
         if page_name == "ActiveListPage":
             self.frames[page_name].show_active_list_contents()
+        if page_name == "AllListsPage":
+            self.frames[page_name].show_all_lists_contents()
 
     def show_home_page(self):
         self.show_frame("MainPage")
@@ -63,8 +65,8 @@ class Application(tk.Tk):
             print(self.lists)
             print(self.active_list)
         else:
-            self.lists["default"] = [item]
-            self.active_list = "default"
+            self.lists["Default"] = [item]
+            self.active_list = "Default"
             print(self.lists)
             print(self.active_list)
 
@@ -277,6 +279,66 @@ class AllListsPage(tk.Frame):
         self.menuSeparator = ttk.Separator(self)
         self.menuSeparator.pack(fill="x")
 
+        # create canvas for scrolling functionality
+        self.canvas = tk.Canvas(self)
+        self.scrollbar = ttk.Scrollbar(
+            self, orient="vertical", command=self.canvas.yview
+        )
+        self.scrollable_frame = ttk.Frame(self.canvas)
+
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")),
+        )
+
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
+    def show_all_lists_contents(self):
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+        all_lists = self.controller.lists
+        print(all_lists)
+        if len(all_lists) == 0:
+            label = ttk.Label(self.scrollable_frame, text="No entries")
+            label.pack()
+        else:
+            for list in all_lists:
+                self.create_list_widget(list)
+
+    def create_list_widget(self, list):
+        item_frame = ttk.Frame(self.scrollable_frame)
+        item_frame.pack(fill="x", pady=5)
+
+        item_label = ttk.Label(item_frame, text=list)
+        item_label.pack(side="left", padx=5)
+
+        done_button = ttk.Button(
+            item_frame, text="Done", command=lambda: self.mark_as_active(list)
+        )
+        done_button.pack(side="right", padx=5)
+
+        remove_button = ttk.Button(
+            item_frame, text="Remove", command=lambda: self.remove_list(list)
+        )
+        remove_button.pack(side="right", padx=5)
+
+    def mark_as_active(self, item):
+        # Implement the logic for marking the item as done TO DO
+        print(f"Item marked as done: {item}")
+
+    def remove_list(self, list):
+        if self.controller.lists[list]:
+            print("Found you!")
+            print(self.controller.lists[list])
+            if list == "Default":
+                self.controller.active_list = None
+            self.controller.lists.pop(list)
+            self.show_all_lists_contents()
+            print(f"Item removed: {list}")
 
 # create active list page
 class ActiveListPage(tk.Frame):
@@ -335,11 +397,6 @@ class ActiveListPage(tk.Frame):
 
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
-
-        # create frame for list items
-        # self.listFrame = ttk.LabelFrame(self, height=250, width=300)
-        # self.listFrame.pack(fill="both")
-        # self.listFrame.pack_propagate(False)
 
     def show_active_list_contents(self):
         for widget in self.scrollable_frame.winfo_children():
