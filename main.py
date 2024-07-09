@@ -28,21 +28,22 @@ class Application(tk.Tk):
 
         # show Main Page on start
         self.show_frame("MainPage")
+        # check for existing list files
         # self.check_for_files()
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
         if page_name == "ActiveListPage":
-            self.frames[page_name].show_active_list()
+            self.frames[page_name].show_active_list_contents()
 
     def show_home_page(self):
         self.show_frame("MainPage")
 
-    def show_active_list(self):
+    def show_active_list_page(self):
         self.show_frame("ActiveListPage")
 
-    def show_all_lists(self):
+    def show_all_lists_page(self):
         self.show_frame("AllListsPage")
 
     def quit_app(self):
@@ -90,10 +91,10 @@ class MainPage(tk.Frame):
         )
         self.menu = tk.Menu(self.topNavButton, tearoff=0)
         self.menu.add_command(
-            label="Active List", command=lambda: self.controller.show_active_list()
+            label="Active List", command=lambda: self.controller.show_active_list_page()
         )
         self.menu.add_command(
-            label="All Lists", command=lambda: self.controller.show_all_lists()
+            label="All Lists", command=lambda: self.controller.show_all_lists_page()
         )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
@@ -162,7 +163,7 @@ class MainPage(tk.Frame):
         self.allListsLabel = tk.Label(self.bottomListFrame, image=self.allListsIcon)
         self.allListsLabel.grid(row=1, column=1, pady=10)
         self.allListsLabel.bind(
-            "<Button-1>", lambda event: self.controller.show_all_lists()
+            "<Button-1>", lambda event: self.controller.show_all_lists_page()
         )
 
     # function for adding a new item
@@ -258,7 +259,7 @@ class AllListsPage(tk.Frame):
         )
         self.menu = tk.Menu(self.topNavButton, tearoff=0)
         self.menu.add_command(
-            label="Active List", command=lambda: self.controller.show_active_list()
+            label="Active List", command=lambda: self.controller.show_active_list_page()
         )
         self.menu.add_command(
             label="Home", command=lambda: self.controller.show_home_page()
@@ -299,7 +300,7 @@ class ActiveListPage(tk.Frame):
         )
         self.menu = tk.Menu(self.topNavButton, tearoff=0)
         self.menu.add_command(
-            label="All Lists", command=lambda: self.controller.show_all_lists()
+            label="All Lists", command=lambda: self.controller.show_all_lists_page()
         )
         self.menu.add_command(
             label="Home", command=lambda: self.controller.show_home_page()
@@ -340,7 +341,7 @@ class ActiveListPage(tk.Frame):
         # self.listFrame.pack(fill="both")
         # self.listFrame.pack_propagate(False)
 
-    def show_active_list(self):
+    def show_active_list_contents(self):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
         active_list = self.controller.lists.get(self.controller.active_list, [])
@@ -375,7 +376,7 @@ class ActiveListPage(tk.Frame):
     def remove_item(self, item):
         if self.controller.active_list:
             self.controller.lists[self.controller.active_list].remove(item)
-            self.show_active_list()
+            self.show_active_list_contents()
             print(f"Item removed: {item}")
 
 
