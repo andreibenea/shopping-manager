@@ -9,7 +9,7 @@ class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("Shopping Manager")
-        self.container = ttk.Frame(self, height=300, width=450, padding=2)
+        self.container = ttk.Frame(self, height=300, width=300, padding=2)
         self.container.pack()
         self.container.pack(fill="both", expand=True)
         self.container.pack_propagate(False)
@@ -77,7 +77,7 @@ class MainPage(tk.Frame):
 
     def create_widgets(self):
         # create top frame for nav and quit buttons
-        self.topMenuFrame = ttk.Frame(self, height=50, width=450, padding=(10, 5))
+        self.topMenuFrame = ttk.Frame(self, height=50, width=300, padding=(10, 5))
         self.topMenuFrame.pack(fill="x")
         self.topMenuFrame.columnconfigure(0, weight=1)
         self.topMenuFrame.columnconfigure(1, weight=1)
@@ -109,7 +109,7 @@ class MainPage(tk.Frame):
         self.menuSeparator.pack(fill="x")
 
         # create middle frame for entry box and add to list button
-        self.middleMenuFrame = ttk.Frame(self, height=100, width=450, padding=(10, 30))
+        self.middleMenuFrame = ttk.Frame(self, height=100, width=300, padding=(10, 30))
         self.middleMenuFrame.pack(fill="x")
         self.middleMenuFrame.columnconfigure(0, weight=1)
         self.middleMenuFrame.columnconfigure(1, weight=1)
@@ -118,11 +118,11 @@ class MainPage(tk.Frame):
         self.middleMenuFrame.grid_propagate(False)
 
         # middle-left info label
-        self.infoLabel = ttk.Label(self.middleMenuFrame, text="Type in item name:")
-        self.infoLabel.grid(row=1, column=0, sticky="E")
+        self.infoLabel = ttk.Label(self.middleMenuFrame, text="Item name:")
+        self.infoLabel.grid(row=1, column=0, sticky="W")
 
         # middle-left entry box
-        self.inputItemBox = ttk.Entry(self.middleMenuFrame, width=15)
+        self.inputItemBox = ttk.Entry(self.middleMenuFrame, width=10)
         self.inputItemBox.grid(row=1, column=1, sticky="W")
 
         # middle-right add to list button
@@ -142,7 +142,7 @@ class MainPage(tk.Frame):
         self.menuSeparator.pack(fill="x")
 
         # create bottom frame for displaying available lists
-        self.bottomListFrame = ttk.Frame(self, height=300, width=450, padding=(10, 5))
+        self.bottomListFrame = ttk.Frame(self, height=300, width=300, padding=(10, 5))
         self.bottomListFrame.pack(fill="x")
         self.bottomListFrame.columnconfigure(0, weight=1)
         self.bottomListFrame.columnconfigure(1, weight=1)
@@ -174,7 +174,7 @@ class MainPage(tk.Frame):
 
             # middle-left info label (quantity)
             self.infoLabel = ttk.Label(self.middleMenuFrame, text="How many items? ")
-            self.infoLabel.grid(row=1, column=0, sticky="E")
+            self.infoLabel.grid(row=1, column=0, sticky="W")
 
             # middle-left entry box (quantity)
             self.inputQuantityBox = ttk.Entry(self.middleMenuFrame, width=5)
@@ -217,11 +217,11 @@ class MainPage(tk.Frame):
             widget.destroy()
 
         # middle-left info label
-        self.infoLabel = ttk.Label(self.middleMenuFrame, text="Type in item name:")
-        self.infoLabel.grid(row=1, column=0, sticky="E")
+        self.infoLabel = ttk.Label(self.middleMenuFrame, text="Item name:")
+        self.infoLabel.grid(row=1, column=0, sticky="W")
 
         # middle-left entry box
-        self.inputItemBox = ttk.Entry(self.middleMenuFrame, width=15)
+        self.inputItemBox = ttk.Entry(self.middleMenuFrame, width=10)
         self.inputItemBox.grid(row=1, column=1, sticky="W")
 
         # middle-right add to list button
@@ -246,7 +246,7 @@ class AllListsPage(tk.Frame):
 
     def create_widgets(self):
         # create top frame for nav and quit buttons
-        self.topMenuFrame = ttk.Frame(self, height=50, width=450, padding=(10, 5))
+        self.topMenuFrame = ttk.Frame(self, height=50, width=300, padding=(10, 5))
         self.topMenuFrame.pack(fill="x")
         self.topMenuFrame.columnconfigure(0, weight=1)
         self.topMenuFrame.columnconfigure(1, weight=1)
@@ -286,7 +286,7 @@ class ActiveListPage(tk.Frame):
 
     def create_widgets(self):
         # create top frame for nav and quit buttons
-        self.topMenuFrame = ttk.Frame(self, height=50, width=450, padding=(10, 5))
+        self.topMenuFrame = ttk.Frame(self, height=50, width=300, padding=(10, 5))
         self.topMenuFrame.pack(fill="x")
         self.topMenuFrame.columnconfigure(0, weight=1)
         self.topMenuFrame.columnconfigure(1, weight=1)
@@ -336,7 +336,7 @@ class ActiveListPage(tk.Frame):
         self.scrollbar.pack(side="right", fill="y")
 
         # create frame for list items
-        # self.listFrame = ttk.LabelFrame(self, height=250, width=450)
+        # self.listFrame = ttk.LabelFrame(self, height=250, width=300)
         # self.listFrame.pack(fill="both")
         # self.listFrame.pack_propagate(False)
 
