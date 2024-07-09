@@ -22,6 +22,10 @@ class Application(tk.Tk):
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="NSEW")
 
+        # Data structures for lists and items
+        self.lists = {}
+        self.active_list = None
+
         # show Main Page on start
         self.show_frame("MainPage")
 
@@ -34,7 +38,7 @@ class Application(tk.Tk):
 
     def show_active_list(self):
         self.show_frame("ActiveList")
-    
+
     def show_all_lists(self):
         self.show_frame("AllLists")
 
@@ -58,10 +62,16 @@ class MainPage(tk.Frame):
         self.topMenuFrame.columnconfigure(2, weight=1)
 
         # top nav button
-        self.topNavButton = ttk.Menubutton(self.topMenuFrame, text="Menu", direction="below")
+        self.topNavButton = ttk.Menubutton(
+            self.topMenuFrame, text="Menu", direction="below"
+        )
         self.menu = tk.Menu(self.topNavButton, tearoff=0)
-        self.menu.add_command(label="Active List", command=lambda: self.controller.show_active_list())
-        self.menu.add_command(label="All Lists", command=lambda: self.controller.show_all_lists())
+        self.menu.add_command(
+            label="Active List", command=lambda: self.controller.show_active_list()
+        )
+        self.menu.add_command(
+            label="All Lists", command=lambda: self.controller.show_all_lists()
+        )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
 
@@ -126,7 +136,9 @@ class MainPage(tk.Frame):
         self.allListsIcon = tk.PhotoImage(file="icons8-documents-100.png")
         self.allListsLabel = tk.Label(self.bottomListFrame, image=self.allListsIcon)
         self.allListsLabel.grid(row=1, column=1, pady=10)
-        self.allListsLabel.bind("<Button-1>", lambda event: self.controller.show_all_lists())
+        self.allListsLabel.bind(
+            "<Button-1>", lambda event: self.controller.show_all_lists()
+        )
 
 
 # create all lists page
@@ -145,10 +157,16 @@ class AllLists(tk.Frame):
         self.topMenuFrame.columnconfigure(2, weight=1)
 
         # top nav button
-        self.topNavButton = ttk.Menubutton(self.topMenuFrame, text="Menu", direction="below")
+        self.topNavButton = ttk.Menubutton(
+            self.topMenuFrame, text="Menu", direction="below"
+        )
         self.menu = tk.Menu(self.topNavButton, tearoff=0)
-        self.menu.add_command(label="Active List", command=lambda: self.controller.show_active_list())
-        self.menu.add_command(label="Home", command=lambda: self.controller.show_home_page())
+        self.menu.add_command(
+            label="Active List", command=lambda: self.controller.show_active_list()
+        )
+        self.menu.add_command(
+            label="Home", command=lambda: self.controller.show_home_page()
+        )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
 
@@ -161,7 +179,7 @@ class AllLists(tk.Frame):
         # separator
         self.menuSeparator = ttk.Separator(self)
         self.menuSeparator.pack(fill="x")
-        
+
 
 # create active list page
 class ActiveList(tk.Frame):
@@ -179,10 +197,16 @@ class ActiveList(tk.Frame):
         self.topMenuFrame.columnconfigure(2, weight=1)
 
         # top nav button
-        self.topNavButton = ttk.Menubutton(self.topMenuFrame, text="Menu", direction="below")
+        self.topNavButton = ttk.Menubutton(
+            self.topMenuFrame, text="Menu", direction="below"
+        )
         self.menu = tk.Menu(self.topNavButton, tearoff=0)
-        self.menu.add_command(label="All Lists", command=lambda: self.controller.show_all_lists())
-        self.menu.add_command(label="Home", command=lambda: self.controller.show_home_page())
+        self.menu.add_command(
+            label="All Lists", command=lambda: self.controller.show_all_lists()
+        )
+        self.menu.add_command(
+            label="Home", command=lambda: self.controller.show_home_page()
+        )
         self.topNavButton["menu"] = self.menu
         self.topNavButton.grid(row=0, column=0, sticky="W")
 
