@@ -317,24 +317,42 @@ class ActiveListPage(tk.Frame):
         self.menuSeparator = ttk.Separator(self)
         self.menuSeparator.pack(fill="x")
 
+        # create canvas for scrolling functionality
+        self.canvas = tk.Canvas(self)
+        self.scrollbar = ttk.Scrollbar(
+            self, orient="vertical", command=self.canvas.yview
+        )
+        self.scrollable_frame = ttk.Frame(self.canvas)
+
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")),
+        )
+
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
         # create frame for list items
-        self.listFrame = ttk.LabelFrame(self, height=250, width=450)
-        self.listFrame.pack(fill="both")
-        self.listFrame.pack_propagate(False)
+        # self.listFrame = ttk.LabelFrame(self, height=250, width=450)
+        # self.listFrame.pack(fill="both")
+        # self.listFrame.pack_propagate(False)
 
     def show_active_list(self):
-        for widget in self.listFrame.winfo_children():
+        for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
         active_list = self.controller.lists.get(self.controller.active_list, [])
         if not active_list:
-            label = ttk.Label(self.listFrame, text="No entries")
+            label = ttk.Label(self.scrollable_frame, text="No entries")
             label.pack()
         else:
             for item in active_list:
                 self.create_item_widget(item)
 
     def create_item_widget(self, item):
-        item_frame = ttk.Frame(self.listFrame)
+        item_frame = ttk.Frame(self.scrollable_frame)
         item_frame.pack(fill="x", pady=5)
 
         item_label = ttk.Label(item_frame, text=item)
@@ -351,7 +369,7 @@ class ActiveListPage(tk.Frame):
         remove_button.pack(side="right", padx=5)
 
     def mark_as_done(self, item):
-        # Implement the logic for marking the item as done
+        # Implement the logic for marking the item as done TO DO
         print(f"Item marked as done: {item}")
 
     def remove_item(self, item):
