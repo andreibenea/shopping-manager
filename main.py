@@ -2,6 +2,7 @@
 import os
 import tkinter as tk
 from tkinter import ttk
+# from idlelib.tooltip import Hovertip
 
 
 # create main application window
@@ -147,6 +148,8 @@ class MainPage(tk.Frame):
             command=lambda: self.prepare_item(),
         )
         self.confirmItemButton.grid(row=1, column=2, sticky="E")
+        # image tooltip
+        # self.confirmItemButtonTooltip = Hovertip(self.confirmItemButton, 'Add to list')
 
         # separator
         self.menuSeparator = ttk.Separator(self)
@@ -176,6 +179,10 @@ class MainPage(tk.Frame):
             "<Button-1>", lambda event: self.controller.show_all_lists_page()
         )
 
+        # image tooltip
+        # self.allListsLabelTooltip = Hovertip(self.allListsLabel, 'Access all lists')
+        
+        
     # function for adding a new item
     def prepare_item(self):
         item_name = self.inputItemBox.get()
