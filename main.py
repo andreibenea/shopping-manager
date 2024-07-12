@@ -2,6 +2,7 @@
 import os
 import tkinter as tk
 from tkinter import ttk
+
 # from idlelib.tooltip import Hovertip
 
 
@@ -181,8 +182,7 @@ class MainPage(tk.Frame):
 
         # image tooltip
         # self.allListsLabelTooltip = Hovertip(self.allListsLabel, 'Access all lists')
-        
-        
+
     # function for adding a new item
     def prepare_item(self):
         item_name = self.inputItemBox.get()
@@ -304,10 +304,14 @@ class AllListsPage(tk.Frame):
         self.menuSeparator = ttk.Separator(self)
         self.menuSeparator.pack(fill="x")
 
+        # create frame for canvas and scroll
+        self.canvasFrame = ttk.Frame(self, padding=(2, 10))
+        self.canvasFrame.pack(fill="x")
+
         # create canvas for scrolling functionality
-        self.canvas = tk.Canvas(self)
+        self.canvas = tk.Canvas(self.canvasFrame)
         self.scrollbar = ttk.Scrollbar(
-            self, orient="vertical", command=self.canvas.yview
+            self.canvasFrame, orient="vertical", command=self.canvas.yview
         )
         self.scrollable_frame = ttk.Frame(self.canvas)
 
@@ -322,6 +326,24 @@ class AllListsPage(tk.Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
+        # separator
+        self.buttonSeparator = ttk.Separator(self)
+        self.buttonSeparator.pack(fill="x")
+
+        # bottom button frame
+        self.bottomButtonsFrame = ttk.Frame(self)
+        self.bottomButtonsFrame.pack(fill="x")
+        self.bottomButtonsFrame.columnconfigure(0, weight=1)
+        self.bottomButtonsFrame.columnconfigure(1, weight=1)
+        self.bottomButtonsFrame.columnconfigure(2, weight=1)
+        self.bottomButtonsFrame.columnconfigure(3, weight=1)
+
+        # bottom button for creating new list
+        self.bottomNewListButton = ttk.Button(
+            self.bottomButtonsFrame, text="New List", command=lambda: self.create_list()
+        )
+        self.bottomNewListButton.grid(row=0, column=1, columnspan=2)
+
     def show_all_lists_contents(self):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
@@ -332,6 +354,7 @@ class AllListsPage(tk.Frame):
                 self.scrollable_frame, text="No entries", font=("PT Mono", 14)
             )
             label.pack()
+
         else:
             for list in all_lists:
                 self.create_list_widget(list)
@@ -344,7 +367,7 @@ class AllListsPage(tk.Frame):
         item_label.pack(side="left", padx=5)
 
         done_button = ttk.Button(
-            item_frame, text="Done", command=lambda: self.mark_as_active(list)
+            item_frame, text="Set Active", command=lambda: self.mark_as_active(list)
         )
         done_button.pack(side="right", padx=5)
 
@@ -355,7 +378,7 @@ class AllListsPage(tk.Frame):
 
     def mark_as_active(self, item):
         # Implement the logic for marking the item as done TO DO
-        print(f"Item marked as done: {item}")
+        print(f"Item marked as active: {item}")
 
     def remove_list(self, list):
         if self.controller.lists[list]:
@@ -366,6 +389,21 @@ class AllListsPage(tk.Frame):
             self.controller.lists.pop(list)
             self.show_all_lists_contents()
             print(f"Item removed: {list}")
+
+    def create_list(self):
+        for widget in self.bottomButtonsFrame.winfo_children():
+            widget.destroy()
+        self.listNameLabel = ttk.Label(self.bottomButtonsFrame, text="List name:")
+        self.listNameLabel.grid(row=0, column=0)
+
+        self.listNameInput = ttk.Entry(self.bottomButtonsFrame, width=8)
+        self.listNameInput.grid(row=0, column=1)
+        
+        self.confirmCreateList = ttk.Button(self.bottomButtonsFrame, text="OK", width=3)
+        self.confirmCreateList.grid(row=0, column=2)
+        
+        self.confirmCreateList = ttk.Button(self.bottomButtonsFrame, text="Cancel", width=5)
+        self.confirmCreateList.grid(row=0, column=3)
 
 
 # create active list page
