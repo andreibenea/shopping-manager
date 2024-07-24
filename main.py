@@ -11,11 +11,8 @@ and allows for quick navigation to the "All Lists" view for further action.
 """
 
 # import modules
-import os
 import tkinter as tk
 from tkinter import ttk
-
-# from idlelib.tooltip import Hovertip
 
 
 # create main application window
@@ -23,38 +20,41 @@ class Application(tk.Tk):
     # define constructor method
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # setup main container title and size
         self.title("Shopping Manager")
         self.container = ttk.Frame(self, height=300, width=300, padding=2)
         self.container.pack()
         self.container.pack(fill="both", expand=True)
-        self.container.pack_propagate(False)
+        self.container.pack_propagate(
+            False
+        )  # prevent changing of size based on children
 
         # setup navigation controller
-        self.frames = {}
+        self.frames = {}  # create empty dictionary to store all frames(pages)
         for F in (MainPage, ActiveListPage, AllListsPage):
-            page_name = F.__name__
-            frame = F(parent=self.container, controller=self)
-            self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="NSEW")
+            page_name = F.__name__  # store page name inside variable
+            frame = F(
+                parent=self.container, controller=self
+            )  # initialize frame from its class
+            self.frames[page_name] = frame  # populate dictionary
+            frame.grid(row=0, column=0, sticky="NSEW")  # position page inside container
 
         # Data structures for lists and items
-        self.lists = {}
-        self.active_list = None
+        self.lists = {}  # initialize empty dictionary for storing lists
+        self.active_list = None  # active list flag
 
         # show Main Page on start
         self.show_frame("MainPage")
-        # check for existing list files
-        # self.check_for_files()
 
     # define class methods
     # method selecting between frames (used by navigation controller)
     def show_frame(self, page_name):
         frame = self.frames[page_name]
-        frame.tkraise()
+        frame.tkraise()  # function that brings (raises) frame into view
         if page_name == "ActiveListPage":
-            self.frames[page_name].show_active_list_contents()
+            self.frames[page_name].show_active_list_contents()  # refresh page contents
         if page_name == "AllListsPage":
-            self.frames[page_name].show_all_lists_contents()
+            self.frames[page_name].show_all_lists_contents()  # refresh page contents
 
     # pass page name to show_frame function
     def show_home_page(self):
@@ -72,21 +72,13 @@ class Application(tk.Tk):
     def quit_app(self):
         self.quit()
 
-    # manipulate files
-    # def check_for_files(self):
-    #     cwd = os.getcwd()+"/lists/"
-    #     print(cwd)
-    #     if not cwd:
-    #         file = open("test.txt", "a")
-    # dir_list = os.listdir(os.getcwd())
-
     # function to add a new item to active list
     def add_item(self, item):
-        if self.active_list:
+        if self.active_list:  # if active list exists, add item to it
             self.lists[self.active_list].append(item)
             print(self.lists)
             print(self.active_list)
-        else:
+        else:  # else create new list named "Default" and set as active_list
             self.lists["Default"] = [item]
             self.active_list = "Default"
             print(self.lists)
@@ -95,6 +87,7 @@ class Application(tk.Tk):
 
 # create main page
 class MainPage(tk.Frame):
+    # define constructor method
     def __init__(self, parent, controller, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.controller = controller
@@ -113,7 +106,9 @@ class MainPage(tk.Frame):
         self.topNavButton = ttk.Menubutton(
             self.topMenuFrame, text="Menu", direction="below"
         )
-        self.menu = tk.Menu(self.topNavButton, tearoff=0)
+        self.menu = tk.Menu(
+            self.topNavButton, tearoff=0
+        )  # create special "menu" button for navigation
         self.menu.add_command(
             label="Active List", command=lambda: self.controller.show_active_list_page()
         )
@@ -169,8 +164,6 @@ class MainPage(tk.Frame):
             command=lambda: self.prepare_item(),
         )
         self.confirmItemButton.grid(row=1, column=2, sticky="E")
-        # image tooltip
-        # self.confirmItemButtonTooltip = Hovertip(self.confirmItemButton, 'Add to list')
 
         # separator
         self.menuSeparator = ttk.Separator(self)
@@ -183,7 +176,7 @@ class MainPage(tk.Frame):
         self.bottomListFrame.columnconfigure(1, weight=1)
         self.bottomListFrame.columnconfigure(2, weight=1)
 
-        # Lists Title
+        # lists title / label
         self.bottomListTitle = ttk.Label(
             self.bottomListFrame,
             text="All Lists",
@@ -192,7 +185,7 @@ class MainPage(tk.Frame):
         )
         self.bottomListTitle.grid(row=0, column=1)
 
-        # Icon button to navigate to All Lists window
+        # icon button to navigate to All Lists page
         self.allListsIcon = tk.PhotoImage(file="icons8-documents-100.png")
         self.allListsLabel = tk.Label(self.bottomListFrame, image=self.allListsIcon)
         self.allListsLabel.grid(row=1, column=1, pady=10)
@@ -200,15 +193,12 @@ class MainPage(tk.Frame):
             "<Button-1>", lambda event: self.controller.show_all_lists_page()
         )
 
-        # image tooltip
-        # self.allListsLabelTooltip = Hovertip(self.allListsLabel, 'Access all lists')
-
     # function for adding a new item
     def prepare_item(self):
-        item_name = self.inputItemBox.get()
-        if item_name.isalpha():
+        item_name = self.inputItemBox.get()  # get entry box value
+        if item_name.isalpha():  # check for value to be "alpha"
             for widget in self.middleMenuFrame.winfo_children():
-                widget.destroy()
+                widget.destroy()  # destroy widgets prior to creating new view
 
             # middle-left info label (quantity)
             self.infoLabel = ttk.Label(
@@ -232,11 +222,11 @@ class MainPage(tk.Frame):
 
     # function confirming item quantity, adding to active list
     def confirm_item(self, item_name):
-        item_quantity = self.inputQuantityBox.get()
-        if item_quantity.isnumeric():
-            item = (item_name, item_quantity)
+        item_quantity = self.inputQuantityBox.get()  # get entry box value
+        if item_quantity.isnumeric():  # check for value to be "numeric"
+            item = (item_name, item_quantity)  # create item tuple
             print(item)
-            self.controller.add_item(item)
+            self.controller.add_item(item)  # call function from controller
             for widget in self.middleMenuFrame.winfo_children():
                 widget.destroy()
 
@@ -282,6 +272,7 @@ class MainPage(tk.Frame):
 
 # create all lists page
 class AllListsPage(tk.Frame):
+    # define constructor method
     def __init__(self, parent, controller, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.controller = controller
@@ -372,10 +363,10 @@ class AllListsPage(tk.Frame):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
         # store all lists and active list inside separate variables
-        all_lists = self.controller.lists
-        active_list = self.controller.active_list
+        all_lists = self.controller.lists  # all available lists
+        active_list = self.controller.active_list  # active list flag
         print(all_lists)
-        if len(all_lists) == 0:
+        if len(all_lists) == 0:  # display label if empty
             label = ttk.Label(
                 self.scrollable_frame, text="No entries", font=("PT Mono", 14)
             )
@@ -383,7 +374,9 @@ class AllListsPage(tk.Frame):
 
         else:
             for list_name in all_lists:
-                self.create_list_widget(list_name, list_name == active_list)
+                self.create_list_widget(
+                    list_name, list_name == active_list
+                )  # populate list
 
     # create widgets for each list in active list
     def create_list_widget(self, list_name, is_active):
@@ -395,7 +388,7 @@ class AllListsPage(tk.Frame):
         item_label = ttk.Label(item_frame, text=list_name, font=("PT Mono", 14))
         item_label.pack(side="left", padx=5)
 
-        # display different buttons if list is active or not
+        # display different buttons depending on list being active or not
         if is_active:
             action_text = "Open"
             action_command = lambda: self.controller.show_active_list_page()
@@ -419,15 +412,13 @@ class AllListsPage(tk.Frame):
 
     # function to remove list from all lists
     def remove_list(self, list_name):
-        # Check if the list exists in the controller
+        # check if the list exists in the controller
         if list_name in self.controller.lists:
-            # If the list is the active list, reset the active list to None
+            # if the list is the active list, reset the active list to None
             if list_name == self.controller.active_list:
                 self.controller.active_list = None
-            # Remove the list from the controller
-            self.controller.lists.pop(list_name)
-            # Refresh the list contents display
-            self.show_all_lists_contents()
+            self.controller.lists.pop(list_name)  # remove the list from the controller
+            self.show_all_lists_contents()  # refresh the list contents display
             print(f"List removed: {list_name}")
 
     # function preparing data required to create a new list
@@ -484,6 +475,7 @@ class AllListsPage(tk.Frame):
 
 # create active list page
 class ActiveListPage(tk.Frame):
+    # define constructor method
     def __init__(self, parent, controller, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.controller = controller
@@ -551,14 +543,14 @@ class ActiveListPage(tk.Frame):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
         active_list = self.controller.lists.get(self.controller.active_list, [])
-        if not active_list:
+        if not active_list: # display label if no active list
             label = ttk.Label(
                 self.scrollable_frame, text="No entries", font=("PT Mono", 14)
             )
             label.pack()
         else:
             for item in active_list:
-                self.create_item_widget(item)
+                self.create_item_widget(item) # populate list
 
     # creates a separate widget for every item inside list
     def create_item_widget(self, item):
