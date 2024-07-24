@@ -396,7 +396,7 @@ class AllListsPage(tk.Frame):
             action_text = "Set Active"
             action_command = lambda: self.mark_as_active(list_name)
 
-        action_button = ttk.Button(item_frame, text=action_text, command=action_command)
+        action_button = ttk.Button(item_frame, text=action_text, command=action_command, width=7)
         action_button.pack(side="right", padx=5)
 
         remove_button = ttk.Button(
