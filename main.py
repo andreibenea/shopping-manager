@@ -20,6 +20,7 @@ from tkinter import ttk
 
 # create main application window
 class Application(tk.Tk):
+    # define constructor method
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("Shopping Manager")
@@ -45,6 +46,8 @@ class Application(tk.Tk):
         # check for existing list files
         # self.check_for_files()
 
+    # define class methods
+    # method selecting between frames (used by navigation controller)
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
@@ -53,15 +56,19 @@ class Application(tk.Tk):
         if page_name == "AllListsPage":
             self.frames[page_name].show_all_lists_contents()
 
+    # pass page name to show_frame function
     def show_home_page(self):
         self.show_frame("MainPage")
 
+    # pass page name to show_frame function
     def show_active_list_page(self):
         self.show_frame("ActiveListPage")
 
+    # pass page name to show_frame function
     def show_all_lists_page(self):
         self.show_frame("AllListsPage")
 
+    # quit application function
     def quit_app(self):
         self.quit()
 
@@ -73,6 +80,7 @@ class Application(tk.Tk):
     #         file = open("test.txt", "a")
     # dir_list = os.listdir(os.getcwd())
 
+    # function to add a new item to active list
     def add_item(self, item):
         if self.active_list:
             self.lists[self.active_list].append(item)
@@ -244,6 +252,7 @@ class MainPage(tk.Frame):
             )
             self.successButton.grid(row=1, column=1, sticky="E")
 
+    # function resetting view to initial state after item was added
     def reset_view(self):
         for widget in self.middleMenuFrame.winfo_children():
             widget.destroy()
@@ -358,9 +367,11 @@ class AllListsPage(tk.Frame):
         )
         self.bottomNewListButton.grid(row=0, column=1, columnspan=2)
 
+    # function used to display all available lists
     def show_all_lists_contents(self):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
+        # store all lists and active list inside separate variables
         all_lists = self.controller.lists
         active_list = self.controller.active_list
         print(all_lists)
@@ -374,25 +385,25 @@ class AllListsPage(tk.Frame):
             for list_name in all_lists:
                 self.create_list_widget(list_name, list_name == active_list)
 
+    # create widgets for each list in active list
     def create_list_widget(self, list_name, is_active):
         item_frame = ttk.Frame(self.scrollable_frame)
         item_frame.pack(fill="x", pady=5)
-        
+
         print(f"Creating widget for: {list_name}")
 
         item_label = ttk.Label(item_frame, text=list_name, font=("PT Mono", 14))
         item_label.pack(side="left", padx=5)
 
+        # display different buttons if list is active or not
         if is_active:
             action_text = "Open"
             action_command = lambda: self.controller.show_active_list_page()
         else:
             action_text = "Set Active"
             action_command = lambda: self.mark_as_active(list_name)
-            
-        action_button = ttk.Button(
-            item_frame, text=action_text, command=action_command
-        )
+
+        action_button = ttk.Button(item_frame, text=action_text, command=action_command)
         action_button.pack(side="right", padx=5)
 
         remove_button = ttk.Button(
@@ -400,16 +411,17 @@ class AllListsPage(tk.Frame):
         )
         remove_button.pack(side="right", padx=5)
 
-    # Mark list as active
+    # mark list as active
     def mark_as_active(self, list_name):
         self.controller.active_list = list_name
         print(f"Item marked as active: {list_name}")
         self.show_all_lists_contents()
 
+    # function to remove list from all lists
     def remove_list(self, list_name):
         # Check if the list exists in the controller
         if list_name in self.controller.lists:
-        # If the list is the active list, reset the active list to None
+            # If the list is the active list, reset the active list to None
             if list_name == self.controller.active_list:
                 self.controller.active_list = None
             # Remove the list from the controller
@@ -418,7 +430,9 @@ class AllListsPage(tk.Frame):
             self.show_all_lists_contents()
             print(f"List removed: {list_name}")
 
+    # function preparing data required to create a new list
     def prepare_create_list(self):
+        """When triggered adds a label and two buttons (Add and Cancel) to the bottom section"""
         for widget in self.bottomButtonsFrame.winfo_children():
             widget.destroy()
 
@@ -444,6 +458,7 @@ class AllListsPage(tk.Frame):
         )
         self.confirmCreateList.grid(row=0, column=3)
 
+    # function creating the actual list entry inside all lists
     def create_list(self):
         list_name = self.listNameInput.get()
         print(list_name)
@@ -531,6 +546,7 @@ class ActiveListPage(tk.Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
+    # function displaying an empty list or triggering the generation of widgets for every item
     def show_active_list_contents(self):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
@@ -544,7 +560,9 @@ class ActiveListPage(tk.Frame):
             for item in active_list:
                 self.create_item_widget(item)
 
+    # creates a separate widget for every item inside list
     def create_item_widget(self, item):
+        """Displays an entry for each item (name+amount). Entry also displays two buttons for further action"""
         item_frame = ttk.Frame(self.scrollable_frame)
         item_frame.pack(fill="x", pady=5)
 
@@ -561,11 +579,14 @@ class ActiveListPage(tk.Frame):
         )
         remove_button.pack(side="right", padx=5)
 
+    # function that changes the style of the widget
     def mark_as_done(self, item):
         # Implement the logic for marking the item as done TO DO
         print(f"Item marked as done: {item}")
 
+    # function that removes the item from the list
     def remove_item(self, item):
+        """Removes the item from the active list and refreshes display"""
         if self.controller.active_list:
             self.controller.lists[self.controller.active_list].remove(item)
             self.show_active_list_contents()
