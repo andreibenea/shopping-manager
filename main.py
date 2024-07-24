@@ -350,6 +350,7 @@ class AllListsPage(tk.Frame):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
         all_lists = self.controller.lists
+        active_list = self.controller.active_list
         print(all_lists)
         if len(all_lists) == 0:
             label = ttk.Label(
@@ -358,23 +359,32 @@ class AllListsPage(tk.Frame):
             label.pack()
 
         else:
-            for list in all_lists:
-                self.create_list_widget(list)
+            for list_name in all_lists:
+                self.create_list_widget(list_name, list_name == active_list)
 
-    def create_list_widget(self, list):
+    def create_list_widget(self, list_name, is_active):
         item_frame = ttk.Frame(self.scrollable_frame)
         item_frame.pack(fill="x", pady=5)
+        
+        print(f"Creating widget for: {list_name}")
 
-        item_label = ttk.Label(item_frame, text=list, font=("PT Mono", 14))
+        item_label = ttk.Label(item_frame, text=list_name, font=("PT Mono", 14))
         item_label.pack(side="left", padx=5)
 
-        done_button = ttk.Button(
-            item_frame, text="Set Active", command=lambda: self.mark_as_active(list)
+        if is_active:
+            action_text = "Open"
+            action_command = lambda: self.controller.show_active_list_page()
+        else:
+            action_text = "Set Active"
+            action_command = lambda: self.mark_as_active(list_name)
+            
+        action_button = ttk.Button(
+            item_frame, text=action_text, command=action_command
         )
-        done_button.pack(side="right", padx=5)
+        action_button.pack(side="right", padx=5)
 
         remove_button = ttk.Button(
-            item_frame, text="Remove", command=lambda: self.remove_list(list)
+            item_frame, text="Remove", command=lambda: self.remove_list(list_name)
         )
         remove_button.pack(side="right", padx=5)
 
@@ -382,18 +392,19 @@ class AllListsPage(tk.Frame):
     def mark_as_active(self, list_name):
         self.controller.active_list = list_name
         print(f"Item marked as active: {list_name}")
+        self.show_all_lists_contents()
 
-    def remove_list(self, list):
+    def remove_list(self, list_name):
         # Check if the list exists in the controller
-        if list in self.controller.lists:
+        if list_name in self.controller.lists:
         # If the list is the active list, reset the active list to None
-            if list == self.controller.active_list:
+            if list_name == self.controller.active_list:
                 self.controller.active_list = None
             # Remove the list from the controller
-            self.controller.lists.pop(list)
+            self.controller.lists.pop(list_name)
             # Refresh the list contents display
             self.show_all_lists_contents()
-            print(f"List removed: {list}")
+            print(f"List removed: {list_name}")
 
     def prepare_create_list(self):
         for widget in self.bottomButtonsFrame.winfo_children():
