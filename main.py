@@ -378,19 +378,22 @@ class AllListsPage(tk.Frame):
         )
         remove_button.pack(side="right", padx=5)
 
-    def mark_as_active(self, item):
-        # Implement the logic for marking the item as done TO DO
-        print(f"Item marked as active: {item}")
+    # Mark list as active
+    def mark_as_active(self, list_name):
+        self.controller.active_list = list_name
+        print(f"Item marked as active: {list_name}")
 
     def remove_list(self, list):
-        if self.controller.lists[list]:
-            print("Found you!")
-            print(self.controller.lists[list])
-            if list == "Default":
+        # Check if the list exists in the controller
+        if list in self.controller.lists:
+        # If the list is the active list, reset the active list to None
+            if list == self.controller.active_list:
                 self.controller.active_list = None
+            # Remove the list from the controller
             self.controller.lists.pop(list)
+            # Refresh the list contents display
             self.show_all_lists_contents()
-            print(f"Item removed: {list}")
+            print(f"List removed: {list}")
 
     def prepare_create_list(self):
         for widget in self.bottomButtonsFrame.winfo_children():
@@ -401,7 +404,6 @@ class AllListsPage(tk.Frame):
 
         self.listNameInput = ttk.Entry(self.bottomButtonsFrame, width=8)
         self.listNameInput.grid(row=0, column=1)
-        # list_name = self.listNameInput.get()
 
         self.confirmCreateList = ttk.Button(
             self.bottomButtonsFrame,
@@ -428,6 +430,7 @@ class AllListsPage(tk.Frame):
         else:
             print("Invalid list name")
 
+    # recreate bottom row after clicking "Cancel"
     def cancel_list_creation(self):
         for widget in self.bottomButtonsFrame.winfo_children():
             widget.destroy()
