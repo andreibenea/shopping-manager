@@ -491,6 +491,8 @@ class ActiveListPage(tk.Frame):
         )
         self.item_labels = {}  # init empty dict used for setting style
 
+        self.done_items = set()  # create set for storing "done" items
+
     def create_widgets(self):
         # create top frame for nav and quit buttons
         self.topMenuFrame = ttk.Frame(self, height=50, width=300, padding=(10, 5))
@@ -574,6 +576,10 @@ class ActiveListPage(tk.Frame):
         # store reference to the item label
         self.item_labels[item] = item_label
 
+        # check if the item is marked as done and apply style
+        if item in self.done_items:
+            item_label.configure(style="GreyedOut.TLabel")
+
         done_button = ttk.Button(
             item_frame, text="Done", command=lambda: self.mark_as_done(item)
         )
@@ -589,6 +595,7 @@ class ActiveListPage(tk.Frame):
         if item in self.item_labels:
             item_label = self.item_labels[item]
             item_label.configure(style="GreyedOut.TLabel")
+            self.done_items.add(item)
         print(f"Item marked as done: {item}")
 
     # function that removes the item from the list
@@ -596,6 +603,8 @@ class ActiveListPage(tk.Frame):
         """Removes the item from the active list and refreshes display"""
         if self.controller.active_list:
             self.controller.lists[self.controller.active_list].remove(item)
+            if item in self.done_items:
+                self.done_items.remove(item)
             self.show_active_list_contents()
             print(f"Item removed: {item}")
 
