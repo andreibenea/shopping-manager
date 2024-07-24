@@ -340,7 +340,9 @@ class AllListsPage(tk.Frame):
 
         # bottom button for creating new list
         self.bottomNewListButton = ttk.Button(
-            self.bottomButtonsFrame, text="New List", command=lambda: self.create_list()
+            self.bottomButtonsFrame,
+            text="New List",
+            command=lambda: self.prepare_create_list(),
         )
         self.bottomNewListButton.grid(row=0, column=1, columnspan=2)
 
@@ -390,20 +392,53 @@ class AllListsPage(tk.Frame):
             self.show_all_lists_contents()
             print(f"Item removed: {list}")
 
-    def create_list(self):
+    def prepare_create_list(self):
         for widget in self.bottomButtonsFrame.winfo_children():
             widget.destroy()
+
         self.listNameLabel = ttk.Label(self.bottomButtonsFrame, text="List name:")
         self.listNameLabel.grid(row=0, column=0)
 
         self.listNameInput = ttk.Entry(self.bottomButtonsFrame, width=8)
         self.listNameInput.grid(row=0, column=1)
-        
-        self.confirmCreateList = ttk.Button(self.bottomButtonsFrame, text="OK", width=3)
+        # list_name = self.listNameInput.get()
+
+        self.confirmCreateList = ttk.Button(
+            self.bottomButtonsFrame,
+            text="OK",
+            width=3,
+            command=lambda: self.create_list(),
+        )
         self.confirmCreateList.grid(row=0, column=2)
-        
-        self.confirmCreateList = ttk.Button(self.bottomButtonsFrame, text="Cancel", width=5)
+
+        self.confirmCreateList = ttk.Button(
+            self.bottomButtonsFrame,
+            text="Cancel",
+            width=5,
+            command=lambda: self.cancel_list_creation(),
+        )
         self.confirmCreateList.grid(row=0, column=3)
+
+    def create_list(self):
+        list_name = self.listNameInput.get()
+        print(list_name)
+        if list_name.isalpha():
+            self.controller.lists[list_name] = []
+            self.show_all_lists_contents()
+        else:
+            print("Invalid list name")
+
+    def cancel_list_creation(self):
+        for widget in self.bottomButtonsFrame.winfo_children():
+            widget.destroy()
+
+        # bottom button for creating new list
+        self.bottomNewListButton = ttk.Button(
+            self.bottomButtonsFrame,
+            text="New List",
+            command=lambda: self.prepare_create_list(),
+        )
+        self.bottomNewListButton.grid(row=0, column=1, columnspan=2)
 
 
 # create active list page
