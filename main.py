@@ -1,3 +1,15 @@
+"""
+Author: Andrei Benea
+Date written: 7/24/24
+Assignment: Final Project - "Shopping Manager"
+This program allow its user to create multiple shopping lists, adding
+various items and their respective quantities to the lists, while also
+offering the possibility to manipulate the items and/or lists. The
+program offers a clear navigation between pages, uses a dashboard to
+quickly add items to the current active list (creating one if none exists),
+and allows for quick navigation to the "All Lists" view for further action.
+"""
+
 # import modules
 import os
 import tkinter as tk
