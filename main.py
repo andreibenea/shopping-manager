@@ -396,7 +396,9 @@ class AllListsPage(tk.Frame):
             action_text = "Set Active"
             action_command = lambda: self.mark_as_active(list_name)
 
-        action_button = ttk.Button(item_frame, text=action_text, command=action_command, width=7)
+        action_button = ttk.Button(
+            item_frame, text=action_text, command=action_command, width=7
+        )
         action_button.pack(side="right", padx=5)
 
         remove_button = ttk.Button(
@@ -481,6 +483,14 @@ class ActiveListPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
+        # define styles
+        self.style = ttk.Style()
+        self.style.configure("TLabel", font=("PT Mono", 14))
+        self.style.configure(
+            "GreyedOut.TLabel", font=("PT Mono", 14), foreground="grey"
+        )
+        self.item_labels = {}  # init empty dict used for setting style
+
     def create_widgets(self):
         # create top frame for nav and quit buttons
         self.topMenuFrame = ttk.Frame(self, height=50, width=300, padding=(10, 5))
@@ -543,14 +553,14 @@ class ActiveListPage(tk.Frame):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
         active_list = self.controller.lists.get(self.controller.active_list, [])
-        if not active_list: # display label if no active list
+        if not active_list:  # display label if no active list
             label = ttk.Label(
                 self.scrollable_frame, text="No entries", font=("PT Mono", 14)
             )
             label.pack()
         else:
             for item in active_list:
-                self.create_item_widget(item) # populate list
+                self.create_item_widget(item)  # populate list
 
     # creates a separate widget for every item inside list
     def create_item_widget(self, item):
@@ -560,6 +570,9 @@ class ActiveListPage(tk.Frame):
 
         item_label = ttk.Label(item_frame, text=item, font=("PT Mono", 14))
         item_label.pack(side="left", padx=5)
+
+        # store reference to the item label
+        self.item_labels[item] = item_label
 
         done_button = ttk.Button(
             item_frame, text="Done", command=lambda: self.mark_as_done(item)
@@ -573,7 +586,9 @@ class ActiveListPage(tk.Frame):
 
     # function that changes the style of the widget
     def mark_as_done(self, item):
-        # Implement the logic for marking the item as done TO DO
+        if item in self.item_labels:
+            item_label = self.item_labels[item]
+            item_label.configure(style="GreyedOut.TLabel")
         print(f"Item marked as done: {item}")
 
     # function that removes the item from the list
