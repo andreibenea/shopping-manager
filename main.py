@@ -17,6 +17,9 @@ from tkinter import ttk
 
 # create main application window
 class Application(tk.Tk):
+    """Main application window in which all other frames are nested.
+    Uses a controller setup for navigation and the function to add new items"""
+
     # define constructor method
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -87,6 +90,8 @@ class Application(tk.Tk):
 
 # create main page
 class MainPage(tk.Frame):
+    """Main page of the application. Contains functions to manage the adding of a new item"""
+
     # define constructor method
     def __init__(self, parent, controller, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -272,6 +277,8 @@ class MainPage(tk.Frame):
 
 # create all lists page
 class AllListsPage(tk.Frame):
+    """All Lists page of the application. Contains functions to manage lists like add, delete and set as active"""
+
     # define constructor method
     def __init__(self, parent, controller, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -477,6 +484,8 @@ class AllListsPage(tk.Frame):
 
 # create active list page
 class ActiveListPage(tk.Frame):
+    """Active List page of the application. Contains functions to manage items like delete and mark as done"""
+
     # define constructor method
     def __init__(self, parent, controller, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -592,6 +601,7 @@ class ActiveListPage(tk.Frame):
 
     # function that changes the style of the widget
     def mark_as_done(self, item):
+        """Marks the item as done by setting a different style"""
         if item in self.item_labels:
             item_label = self.item_labels[item]
             item_label.configure(style="GreyedOut.TLabel")
