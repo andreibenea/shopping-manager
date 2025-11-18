@@ -1,1 +1,3 @@
 # shopping-manager
+
+Desktop Application
